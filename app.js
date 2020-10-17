@@ -5,7 +5,7 @@ const cors = require("cors");
 require("./config/db.config");
 
 //Router definition
-const usersRouter = require("./routes/users.route");
+const userRouter = require("./routes/user.route");
 
 const app = express();
 
@@ -22,6 +22,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
-app.use("/user", usersRouter);
+app.use("/user", userRouter);
 
 module.exports = app;
