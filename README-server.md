@@ -28,10 +28,10 @@ This is an app to allow users to search through a list of songs and then sign up
 
 **_ BASIC USER _**
 
-- **Search:** As a user, I would like to see a full list of songs and be able to search through them.
+- **Search:** As a user, I would like to search through songs by keyword.
 - **Create:** As a user, I can create my profile (stageName, email, photoUrl).
 - **Edit:** As a user, I can edit my profile (stageName, email, photoUrl).
-- **Add Songs to the Signup List:** As a user I can add songs to the signup list.
+- **Add Songs to the Queue:** As a user I can add songs to the queue.
 - **View Singer Queue:** As a user I can view the singer queue.
 
 **_ DJ_**
@@ -100,23 +100,12 @@ const userSchema = new Schema(
       type: String,
       required: [true, "Password is required."]
     },
-    zipCode: {
-      type: Number,
-    },
     photoUrl: {
       type: String
     },
     isAdmin: {
       type: Boolean,
       default: false
-    },
-    favorites:{
-      [{
-        type: ObjectId, ref: "Song"
-      }]
-    },
-    songCount:{
-      type: Number
     }
   },
   {
@@ -158,15 +147,29 @@ const songSchema = new Schema(
       type: String,
       required: true
   },
-    wasSung:{
-      type: boolean
-    }
   {
     timestamps: true
   }
 );
 
-module.exports = model("Song", songSchema);
+module.exports = model("Songs", songSchema);
+
+
+
+const singerSongSchema = new Schema (
+  {
+  singer:{type:ObjectId, ref:"User"}  //req with populate search specific user and grab stageName
+  song:{type:ObjectId, ref: "Songs"},
+  },
+  wasSung:{
+      type: boolean
+    },
+  {
+    timestamps: true
+  }
+);
+
+module.exports = model("singerSong", singerSongSchema)
 
 
 //Queue Model
@@ -175,8 +178,8 @@ const ObjectId = Schema.Types.ObjectId;
 
 const queueSchema = new Schema (
   {
-  songQueue: [{type: ObjectId, ref: "User"}, {type: ObjectId, ref: "Song"}],
-},
+  singerSong: [{type:ObjectId, ref:"singerSong"}],
+  },
   {
     timestamps: true
   }
@@ -190,18 +193,18 @@ module.exports = model("Queue", queueSchema)
 
 ## API Endpoints (backend routes)
 
-| HTTP Method | URL                | Request Body                                                 | Success | Error | Description            |
-| ----------- | ------------------ | ------------------------------------------------------------ | ------- | ----- | ---------------------- |
-| POST        | `/auth/signup`     | {firstName, lastName, username, password}                    | 201     | 404   | auth.routes.js         |
-| POST        | `/auth/login`      | {email, password}                                            | 200     | 404   | login.routes.js        |
-| POST        | `/auth/logout`     | (empty)                                                      | 204     | 400   |                        |
-| PUT         | `/profile/edit`    | {email, stageName, photoUrl, password}                       | 200     | 400   | Edits user's info      |
-| GET         | `/profile`         | {email, stageName, photoUrl, password, songCount, favorites} | 200     | 400   | View user info         |
-| GET         | `/search`          |                                                              | 200     | 400   | Seach by keyword       |
-| GET         | `/song-list`       |                                                              | 200     | 400   | Sort by Artist/Song    |
-| GET         | `/queue`           |                                                              | 200     | 400   | View Queue             |
-| PUT         | `/queue/edit/{id}` |                                                              | 200     | 400   | Edit Song in Queue     |
-| DELETE      | `/queue/delete`    |                                                              | 200     | 400   | Delete Song from Queue |
+| HTTP Method | URL                 | Request Body                                                 | Success         | Error | Description            |
+| ----------- | ------------------- | ------------------------------------------------------------ | --------------- | ----- | ---------------------- |
+| POST        | `/auth/signup`      | {firstName, lastName, username, password}                    | 201             | 404   | auth.routes.js         |
+| POST        | `/auth/login`       | {email, password}                                            | 200             | 404   | login.routes.js        |
+| POST        | `/auth/logout`      | (empty)                                                      | 204             | 400   |                        |
+| POST        | `/auth/editProfile` | {email, stageName, photoUrl, password}                       | 200             | 400   | Edits user's info      |
+| POST        | `/auth/profile`     | {email, stageName, photoUrl, password, songCount, favorites} | 200             | 400   | View user info         |
+| POST        | `/auth/upload`      | image file                                                   | 200             | 400   | Upload profile image   |
+| GET         | `/search`           | search params                                                | 200             | 400   | Seach by keyword       |
+| GET         | `/queue/{id}`       | queue id                                                     | 200             | 400   | View Queue             |
+| <!--        | PUT                 | `/queue/{id}`                                                | singerSong {id} | 200   | 400                    | Edit Song in Queue | --> |
+| DELETE      | `/queue/{id}`       | singerSong {id}                                              | 200             | 400   | Delete Song from Queue |
 
 <br>
 
@@ -216,6 +219,10 @@ module.exports = model("Queue", queueSchema)
 [Server Repository](https://github.com/mattalanhoward/karaoke-server)
 
 [Client Repository](https://github.com/mattalanhoward/karaoke-client)
+
+### WireFrame
+
+https://www.figma.com/file/uPA4tlHQv7dk7qAwGkK35w/Noda-101?node-id=0%3A1
 
 [Deployed App Link](
 
