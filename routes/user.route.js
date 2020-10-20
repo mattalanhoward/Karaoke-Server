@@ -14,12 +14,12 @@ const mongoose = require("mongoose");
 
 // .post() route ==> to process form data
 router.post("/signup", (req, res, next) => {
-  const { username, email, password } = req.body;
+  const { stageName, email, password } = req.body;
 
-  if (!username || !email || !password) {
+  if (!stageName || !email || !password) {
     res.status(200).json({
       errorMessage:
-        "All fields are mandatory. Please provide your username, email and password.",
+        "All fields are mandatory. Please provide your stage name, email and password.",
     });
     return;
   }
@@ -40,8 +40,8 @@ router.post("/signup", (req, res, next) => {
     .then((salt) => bcryptjs.hash(password, salt))
     .then((hashedPassword) => {
       return User.create({
-        // username: username
-        username,
+        // stageName: stageName
+        stageName,
         email,
         // password => this is the key from the User model
         //     ^
@@ -63,7 +63,7 @@ router.post("/signup", (req, res, next) => {
       } else if (error.code === 11000) {
         res.status(200).json({
           errorMessage:
-            "Username and email need to be unique. Either username or email is already used.",
+            "Stage name and email need to be unique. Either stage name or email is already used.",
         });
       } else {
         res.status(500).json({ errorMessage: error });
