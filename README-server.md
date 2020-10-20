@@ -213,12 +213,10 @@ module.exports = model("Queue", queueSchema)
 
 ### Github
 
-[Server Repository](https://github.com/valmgisbert/legend-of-iron-server)
+[Server Repository](https://github.com/mattalanhoward/karaoke-server)
 
-[Client Repository](https://github.com/valmgisbert/legend-of-iron)
+[Client Repository](https://github.com/mattalanhoward/karaoke-client)
 
 [Deployed App Link](
 
 ### Slides
-
-[GSlides](https://docs.google.com/presentation/d/1bKVonZvvS5zhpmzB60UIB2CO1sDBJNT__s5HQtq2nDU/edit?usp=sharing)
