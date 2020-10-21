@@ -6,7 +6,8 @@ const User = require("../models/User.model");
 const bcryptjs = require("bcryptjs");
 const saltRounds = 10;
 const mongoose = require("mongoose");
-
+// include CLOUDINARY:
+const uploader = require('../config/cloudinary');
 
 ////////////////////////////////////////////////////////////////////////
 ///////////////////////////// PROFILE //////////////////////////////////
@@ -32,7 +33,7 @@ router.post("/", (req,res, next) => {
 
 router.post("/editProfile", (req, res, next) => {
   console.log(req.body)
-    const { firstName, lastName, stageName, email, password, userId} = req.body;
+    const { firstName, lastName, stageName, email, password, userId, photoUrl } = req.body;
     console.log(`CURRENT USER`, userId);
 
     console.log(req.body)
@@ -68,6 +69,7 @@ router.post("/editProfile", (req, res, next) => {
           lastName,
           stageName,
           email,
+          photoUrl,
           // password => this is the key from the User model
           //     ^
           //     |            |--> this is placeholder (how we named returning value from the previous method (.hash()))
@@ -95,18 +97,19 @@ router.post("/editProfile", (req, res, next) => {
 ///////////////////////// UPLOAD PHOTO /////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-router.post("/", (req,res, next) => {
-  const { firstName, lastName, stageName, email, userId} = req.body;
-  console.log(`POSTER`)
-  console.log(userId)
-  User.findById(userId)
-  return ({
-    firstName, 
-    lastName,
-    stageName,
-    email,
-  })
-});
+
+ 
+router.post('/upload', uploader.single("photoUrl"), (req, res, next) => {
+    console.log('file is: ', req.file)
+ 
+    if (!req.file) {
+      next(new Error('No file uploaded!'));
+      return;
+    }
+    // get secure_url from the file object and save it in the 
+    // variable 'secure_url', but this can be any name, just make sure you remember to use the same in frontend
+    res.json({ secure_url: req.file.secure_url });
+})
 
 
 module.exports = router;
