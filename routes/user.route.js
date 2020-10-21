@@ -16,6 +16,7 @@ const mongoose = require("mongoose");
 router.post("/signup", (req, res, next) => {
   const { stageName, email, password } = req.body;
 
+  console.log(req.body)
   if (!stageName || !email || !password) {
     res.status(200).json({
       errorMessage:

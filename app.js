@@ -7,6 +7,7 @@ require('dotenv').config()
 
 //Router definition
 const userRouter = require("./routes/user.route");
+const profileRouter = require("./routes/profile.route");
 
 const app = express();
 
@@ -24,5 +25,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use("/user", userRouter);
+app.use("/profile", profileRouter);
+
 
 module.exports = app;

@@ -195,7 +195,7 @@ module.exports = model("Queue", queueSchema)
 
 | HTTP Method | URL                 | Request Body                                                 | Success         | Error | Description            |
 | ----------- | ------------------- | ------------------------------------------------------------ | --------------- | ----- | ---------------------- |
-| POST        | `/auth/signup`      | {firstName, lastName, username, password}                    | 201             | 404   | auth.routes.js         |
+| POST        | `/auth/signup`      | {stageName, email, password}                                 | 201             | 404   | auth.routes.js         |
 | POST        | `/auth/login`       | {email, password}                                            | 200             | 404   | login.routes.js        |
 | POST        | `/auth/logout`      | (empty)                                                      | 204             | 400   |                        |
 | POST        | `/auth/editProfile` | {email, stageName, photoUrl, password}                       | 200             | 400   | Edits user's info      |
