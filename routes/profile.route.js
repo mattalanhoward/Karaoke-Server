@@ -12,10 +12,16 @@ const mongoose = require("mongoose");
 ///////////////////////////// PROFILE //////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-router.get('/update', (req,res, next) => {
-  User.find()
-  .then(allUsers => {
-      console.log(allUsers)
+router.post("/", (req,res, next) => {
+  const { firstName, lastName, stageName, email, userId} = req.body;
+  console.log(`POSTER`)
+  console.log(userId)
+  User.findById(userId)
+  return ({
+    firstName, 
+    lastName,
+    stageName,
+    email,
   })
 });
 
@@ -26,14 +32,14 @@ router.get('/update', (req,res, next) => {
 
 router.post("/editProfile", (req, res, next) => {
   console.log(req.body)
-    const { stageName, email, password, userId} = req.body;
+    const { firstName, lastName, stageName, email, password, userId} = req.body;
     console.log(`CURRENT USER`, userId);
 
     console.log(req.body)
     if (!stageName || !email || !password) {
       res.status(200).json({
         errorMessage:
-          "All fields are mandatory. Please provide your stage name, email and password.",
+          "Missing mandatory fields. Please provide your stage name, email and password.",
       });
       return;
     }
@@ -58,7 +64,8 @@ router.post("/editProfile", (req, res, next) => {
       .then((salt) => bcryptjs.hash(password, salt))
       .then((hashedPassword) => {
         return User.findByIdAndUpdate(userId,{
-          // stageName: stageName
+          firstName, 
+          lastName,
           stageName,
           email,
           // password => this is the key from the User model
@@ -80,5 +87,26 @@ router.post("/editProfile", (req, res, next) => {
         }
       }); // close .catch()
   });
+
+
+
+
+////////////////////////////////////////////////////////////////////////
+///////////////////////// UPLOAD PHOTO /////////////////////////////////
+////////////////////////////////////////////////////////////////////////
+
+router.post("/", (req,res, next) => {
+  const { firstName, lastName, stageName, email, userId} = req.body;
+  console.log(`POSTER`)
+  console.log(userId)
+  User.findById(userId)
+  return ({
+    firstName, 
+    lastName,
+    stageName,
+    email,
+  })
+});
+
 
 module.exports = router;
