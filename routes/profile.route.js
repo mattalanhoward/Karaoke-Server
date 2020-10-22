@@ -15,15 +15,13 @@ const uploader = require('../config/cloudinary');
 
 router.post("/", (req,res, next) => {
   const { firstName, lastName, stageName, email, userId} = req.body;
-  console.log(`POSTER`)
+  console.log(`VIEW PROFILE`)
   console.log(userId)
   User.findById(userId)
-  return ({
-    firstName, 
-    lastName,
-    stageName,
-    email,
+  .then((user)=> {
+    res.status(200).json(user)
   })
+ 
 });
 
 
@@ -46,7 +44,6 @@ router.post("/editProfile", (req, res, next) => {
     }
   
     // make sure passwords are strong:
-  
     const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
     if (!regex.test(password)) {
       res.status(200).json({
@@ -57,8 +54,6 @@ router.post("/editProfile", (req, res, next) => {
     }
   
 
-
-    //NEED TO GET CORRECT USER OBJECT ID AND THEN THIS WILL WORK!!
     
     bcryptjs
       .genSalt(saltRounds)
@@ -100,8 +95,14 @@ router.post("/editProfile", (req, res, next) => {
 
  
 router.post('/upload', uploader.single("photoUrl"), (req, res, next) => {
-    console.log('file is: ', req.file)
- 
+  const { firstName, lastName, stageName, email, password, userId, photoUrl } = req.body;
+  console.log(`CURRENT USER in PHOTO UPLOAD`, userId);
+  console.log(`UPload USER ID`, req.body)
+  console.log('file is: ', req.file)
+    // console.log(`PATH`, req.file.path)
+    User.findByIdAndUpdate("5f900af3a0d02106ef89ce8d",{
+      photoUrl:req.file.path,
+    });
     if (!req.file) {
       next(new Error('No file uploaded!'));
       return;

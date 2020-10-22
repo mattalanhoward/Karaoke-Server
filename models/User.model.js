@@ -14,7 +14,6 @@ const userSchema = new Schema(
       type: String,
       unique: true,
       required: [true, "Stage Name is required."]
-
     },
     email: {
       type: String,
