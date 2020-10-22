@@ -55,7 +55,7 @@ router.post("/editProfile", (req, res) => {
     Object.entries(req.body).filter((element) => element[1])
   );
 
-      User.findByIdAndUpdate(userId,{
+      User.findByIdAndUpdate(userId, body, {
           firstName, 
           lastName,
           stageName,
@@ -151,18 +151,21 @@ router.post('/upload', uploader.single("photoUrl"), (req, res, next) => {
   const { firstName, lastName, stageName, email, password, userId, photoUrl } = req.body;
   console.log(`CURRENT USER in PHOTO UPLOAD`, userId);
   console.log(`UPload USER ID`, req.body)
-  console.log('file is: ', req.file)
-    // console.log(`PATH`, req.file.path)
-    User.findByIdAndUpdate("5f900af3a0d02106ef89ce8d",{
-      photoUrl:req.file.path,
-    });
-    if (!req.file) {
-      next(new Error('No file uploaded!'));
-      return;
-    }
+  console.log('FILE is: ', req.file)
+    console.log(`PATH`, req.file.path)
+    // User.findByIdAndUpdate("5f900af3a0d02106ef89ce8d",{
+    //   photoUrl,
+    // })
+    
+      res.status(200).json(req.file.path)
+    
+    // if (!req.file) {
+    //   next(new Error('No file uploaded!'));
+    //   return;
+    // }
     // get secure_url from the file object and save it in the 
     // variable 'secure_url', but this can be any name, just make sure you remember to use the same in frontend
-    res.json({ secure_url: req.file.secure_url });
+    // res.status(200).json({ secure_url: req.file.secure_url });
 })
 
 
