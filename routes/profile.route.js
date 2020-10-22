@@ -35,42 +35,18 @@ router.post("/editProfile", (req, res, next) => {
     console.log(`CURRENT USER`, userId);
 
     console.log(req.body)
-    if (!stageName || !email || !password) {
-      res.status(200).json({
-        errorMessage:
-          "Missing mandatory fields. Please provide your stage name, email and password.",
-      });
-      return;
-    }
-  
-    // make sure passwords are strong:
-    const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
-    if (!regex.test(password)) {
-      res.status(200).json({
-        errorMessage:
-          "Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter.",
-      });
-      return;
-    }
-  
 
-    
-    bcryptjs
-      .genSalt(saltRounds)
-      .then((salt) => bcryptjs.hash(password, salt))
-      .then((hashedPassword) => {
-        return User.findByIdAndUpdate(userId,{
+      User.findByIdAndUpdate(userId,{
           firstName, 
           lastName,
           stageName,
           email,
           photoUrl,
-          // password => this is the key from the User model
-          //     ^
-          //     |            |--> this is placeholder (how we named returning value from the previous method (.hash()))
-          password: hashedPassword,
-        });
-      })
+        })
+        .then((user)=> {
+          res.status(200).json(user)
+        })
+      
       .catch((error) => {
         if (error instanceof mongoose.Error.ValidationError) {
           res.status(200).json({ errorMessage: error.message });
@@ -83,7 +59,7 @@ router.post("/editProfile", (req, res, next) => {
           res.status(500).json({ errorMessage: error });
         }
       }); // close .catch()
-  });
+    })
 
 
 
