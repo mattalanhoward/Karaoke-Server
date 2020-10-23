@@ -201,7 +201,7 @@ module.exports = model("Queue", queueSchema)
 | POST        | `/auth/editProfile` | {email, stageName, photoUrl, password}                       | 200             | 400   | Edits user's info      |
 | POST        | `/auth/profile`     | {email, stageName, photoUrl, password, songCount, favorites} | 200             | 400   | View user info         |
 | POST        | `/auth/upload`      | image file                                                   | 200             | 400   | Upload profile image   |
-| GET         | `/search`           | search params                                                | 200             | 400   | Seach by keyword       |
+| GET         | `/search/params`    | search params                                                | 200             | 400   | Seach by keyword       |
 | GET         | `/queue/{id}`       | queue id                                                     | 200             | 400   | View Queue             |
 | <!--        | PUT                 | `/queue/{id}`                                                | singerSong {id} | 200   | 400                    | Edit Song in Queue | --> |
 | DELETE      | `/queue/{id}`       | singerSong {id}                                              | 200             | 400   | Delete Song from Queue |
