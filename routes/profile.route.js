@@ -21,7 +21,8 @@ router.post("/", (req,res, next) => {
   .then((user)=> {
     res.status(200).json(user)
   })
- 
+  .catch((error) => res.status(500).json({ errorMessage: error }));
+
 });
 
 
@@ -158,7 +159,8 @@ router.post('/upload', uploader.single("photoUrl"), (req, res, next) => {
     // })
     
       res.status(200).json(req.file.path)
-    
+      .catch((error) => res.status(500).json({ errorMessage: error }));
+
 })
 
 

@@ -13,6 +13,7 @@ router.get("/songs/:Search", (req, res) =>{
     Songs
     // get ALL occurrences (g), be case insensitive (i), and use boundaries so that it isn't a word within another word (\\b)
     .find({$or: [{ Title: RegExp(`\\b${searchParams}\\b`, 'gi')},{ Artist: RegExp(`\\b${searchParams}\\b`, 'gi')}]})
+    // .find({$or:[{"Title":{"$regex":`${searchParams}`}},{"Artist":{"$regex":`${searchParams}`}}]})
     .then((songResults) => {
       console.log(`SEARCH RESULTS FROM DB`, songResults);
       res.status(200).json(songResults)

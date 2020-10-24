@@ -1,16 +1,16 @@
-const singerSongSchema = new Schema (
-    {
-    singer:{type:ObjectId, ref:"User"},  //req with populate search specific user and grab stageName
-    song:{type:ObjectId, ref: "Songs"},
+const { Schema, model } = require("mongoose");
+
+const singerSongSchema = new Schema(
+  {
+    singer: { type: Schema.Types.ObjectId, ref: "User" }, //req with populate search specific user and grab stageName
+    song: { type: Schema.Types.ObjectId, ref: "Songs" },
+    wasSung: {
+      type: Boolean,
     },
-    {
-    wasSung:{
-        type: boolean
-      }
-    },
-    {
-      timestamps: true
-    }
-  );
-  
-  module.exports = model("singerSong", singerSongSchema)
+  },
+  {
+    timestamps: true,
+  }
+);
+
+module.exports = model("SingerSong", singerSongSchema);

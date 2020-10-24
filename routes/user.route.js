@@ -16,7 +16,7 @@ const mongoose = require("mongoose");
 router.post("/signup", (req, res, next) => {
   const { stageName, email, password } = req.body;
 
-  console.log(req.body)
+  console.log(req.body);
   if (!stageName || !email || !password) {
     res.status(200).json({
       errorMessage:
@@ -105,7 +105,7 @@ router.post("/login", (req, res, next) => {
         res.status(200).json({ errorMessage: "Incorrect password." });
       }
     })
-    .catch((error) => res.status(500).json({ errorMessage: err }));
+    .catch((error) => res.status(500).json({ errorMessage: error }));
 });
 
 ////////////////////////////////////////////////////////////////////////
@@ -124,18 +124,20 @@ router.post("/logout", (req, res) => {
 
 router.get("/session/:accessToken", (req, res) => {
   const { accessToken } = req.params;
-  Session.findById({ _id: accessToken }).populate("userId").then((session) => {
-    if (!session) {
-      res.status(200).json({
-        errorMessage: "Session does not exist",
-      });
-    } else {
-      res.status(200).json({
-        session
-      });
-    }
-  })
-  .catch(err => res.status(500).json({errorMessage: err}))
+  Session.findById({ _id: accessToken })
+    .populate("userId")
+    .then((session) => {
+      if (!session) {
+        res.status(200).json({
+          errorMessage: "Session does not exist",
+        });
+      } else {
+        res.status(200).json({
+          session,
+        });
+      }
+    })
+    .catch((err) => res.status(500).json({ errorMessage: err }));
 });
 
 module.exports = router;
