@@ -13,7 +13,7 @@ router.post("/", (req, res) => {
   const singerPromise = User.findById(userId);
   const songsPromise = Songs.findById(songId);
 
-  //promise all fires the two promises above at the same time.  => faster return.
+  //promise.all fires the two promises above at the same time.  => faster return.
   Promise.all([singerPromise, songsPromise]).then((allPromises) => {
     const [singer, song] = allPromises;
 
