@@ -3,17 +3,17 @@ const { Schema, model } = require("mongoose");
 
 const songsSchema = new Schema(
   {
-    title: {
+    Title: {
       type: String,
-      required: true
+      required: true,
     },
-    artist: {
+    Artist: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

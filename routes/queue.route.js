@@ -30,6 +30,7 @@ router.post("/addSong", (req, res) => {
           Queue.findOne({}).populate({
             path: "singerSong",
           });
+          console.log(`UPdated Queue`, updatedQueue);
           res.status(200).json({ updatedQueue });
         })
         .catch((error) => {
@@ -40,4 +41,43 @@ router.post("/addSong", (req, res) => {
   });
 });
 
+router.get("/:id", (req, res) => {
+  console.log(`GETTIN THE LIST DETAILS of QUEUE ID`, req.params);
+  Queue.findById(req.params.id)
+
+    //Deep Populate
+    .populate({
+      path: "singerSong",
+      model: "SingerSong",
+      populate: {
+        path: "singer",
+        model: "User",
+      },
+    })
+    .populate({
+      path: "singerSong",
+      model: "SingerSong",
+      populate: {
+        path: "song",
+        model: "Songs",
+      },
+    })
+
+    .then((response) => {
+      // const song = response.singerSong[0].song;
+      const song = response.singerSong;
+      // console.log(song.Title, song.Artist);
+      res.status(200).json({ song });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json(`ERROR getting song details`, error);
+    });
+});
 module.exports = router;
+
+// populate({
+//   path: 'friends',
+//   // Get friends of friends - populate the 'friends' array for every friend
+//   populate: { path: 'friends' }
+// }).
