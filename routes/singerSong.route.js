@@ -56,4 +56,18 @@ router.post("/complete", (req, res) => {
     });
 });
 
+//User Deletes Signup
+router.post("/deleteSignup", (req, res) => {
+  console.log(`Delete Signup`, req.body.singerSongId);
+  SingerSong.findByIdAndDelete(req.body.singerSongId)
+    .then((deletedSignup) => {
+      console.log(deletedSignup);
+      res.status(200).json({ deletedSignup });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json(`ERROR getting the queue`, error);
+    });
+});
+
 module.exports = router;
