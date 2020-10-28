@@ -19,21 +19,21 @@ router.post("/addSong", (req, res) => {
   console.log(`ADD SONG BODY SINGER`, req.body.newSignUp);
   const { newSignUp } = req.body;
 
-  //checks if queue exists
-  // Queue.find({}, function (err, queues) {
-  //   console.log(`QUEUES`, queues);
-  //   if (err) {
-  //     console.log(err);
-  //   }
-  //   //if no queue, create one and add 1st singerSong to it.
-  //   if (!queues.length) {
-  //     console.log(`No QUEUE`);
-  //     Queue.create({
-  //       singerSong: newSignUp._id,
-  //     });
-  //   } else {
-  //if queue exists, adds to it.
-
+  // checks if queue exists
+  Queue.find({}, function (err, queues) {
+    console.log(`QUEUES`, queues);
+    if (err) {
+      console.log(err);
+    }
+    //if no queue, create one and add 1st singerSong to it.
+    if (!queues.length) {
+      console.log(`No QUEUE`);
+      Queue.create({
+        singerSong: newSignUp._id,
+      });
+    }
+  });
+  // if queue exists, adds to it.
   Queue.findOneAndUpdate(
     {},
     { $push: { singerSong: newSignUp._id } },

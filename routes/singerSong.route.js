@@ -36,4 +36,18 @@ router.post("/", (req, res) => {
   });
 });
 
+router.post("/complete", (req, res) => {
+  SingerSong.findByIdAndUpdate(req.body.singerSongId)
+
+    .then((singersong) => {
+      singersong.wasSung = true;
+      res.status(200).json({ singersong });
+    })
+
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json(error);
+    });
+});
+
 module.exports = router;
