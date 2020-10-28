@@ -37,10 +37,16 @@ router.post("/", (req, res) => {
 });
 
 router.post("/complete", (req, res) => {
+  console.log(`SINGER SONG`, req.body);
+  console.log(`SINGER SONG ID`, req.body.singerSongId);
+
   SingerSong.findByIdAndUpdate(req.body.singerSongId)
 
     .then((singersong) => {
-      singersong.wasSung = true;
+      //toggle true/false
+      singersong.wasSung = !singersong.wasSung;
+      singersong.save();
+      console.log(`SINGERSONG`, singersong);
       res.status(200).json({ singersong });
     })
 

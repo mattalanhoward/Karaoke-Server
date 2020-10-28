@@ -6,6 +6,7 @@ const singerSongSchema = new Schema(
     song: { type: Schema.Types.ObjectId, ref: "Songs" },
     wasSung: {
       type: Boolean,
+      default: false,
     },
   },
   {
