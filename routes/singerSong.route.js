@@ -42,12 +42,12 @@ router.post("/complete", (req, res) => {
 
   SingerSong.findByIdAndUpdate(req.body.singerSongId)
 
-    .then((singersong) => {
+    .then((updateSung) => {
       //toggle true/false
-      singersong.wasSung = !singersong.wasSung;
-      singersong.save();
-      console.log(`SINGERSONG`, singersong);
-      res.status(200).json({ singersong });
+      updateSung.wasSung = !updateSung.wasSung;
+      updateSung.save();
+      console.log(`SINGERSONG`, updateSung);
+      res.status(200).json(updateSung);
     })
 
     .catch((error) => {
