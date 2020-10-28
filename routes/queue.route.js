@@ -2,45 +2,59 @@ const { Router } = require("express");
 const router = new Router();
 const Queue = require("../models/Queue.model");
 
+router.get("/", (req, res) => {
+  console.log(`Get Queue`, req.body);
+  Queue.find({})
+    .then((queueFromDb) => {
+      console.log(queueFromDb);
+      res.status(200).json({ queueFromDb });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json(`ERROR getting the queue`, error);
+    });
+});
+
 router.post("/addSong", (req, res) => {
   console.log(`ADD SONG BODY SINGER`, req.body.newSignUp);
   const { newSignUp } = req.body;
 
   //checks if queue exists
-  Queue.find({}, function (err, queues) {
-    console.log(`QUEUES`, queues);
-    if (err) {
-      console.log(err);
-    }
-    //if no queue, create one and add 1st singerSong to it.
-    if (!queues.length) {
-      console.log(`No QUEUE`);
-      Queue.create({
-        singerSong: newSignUp._id,
+  // Queue.find({}, function (err, queues) {
+  //   console.log(`QUEUES`, queues);
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  //   //if no queue, create one and add 1st singerSong to it.
+  //   if (!queues.length) {
+  //     console.log(`No QUEUE`);
+  //     Queue.create({
+  //       singerSong: newSignUp._id,
+  //     });
+  //   } else {
+  //if queue exists, adds to it.
+
+  Queue.findOneAndUpdate(
+    {},
+    { $push: { singerSong: newSignUp._id } },
+    { safe: true, upsert: true, new: true }
+  )
+    .then((updatedQueue) => {
+      console.log(updatedQueue);
+      Queue.findOne({}).populate({
+        path: "singerSong",
       });
-    } else {
-      //if queue exists, adds to it.
-      Queue.findOneAndUpdate(
-        {},
-        { $push: { singerSong: newSignUp._id } },
-        { safe: true, upsert: true, new: true }
-      )
-        .then((updatedQueue) => {
-          console.log(updatedQueue);
-          Queue.findOne({}).populate({
-            path: "singerSong",
-          });
-          console.log(`UPdated Queue`, updatedQueue);
-          res.status(200).json({ updatedQueue });
-        })
-        .catch((error) => {
-          console.log(error);
-          res.status(500).json(`ERROR adding Singersong to Queue`, error);
-        });
-    }
-  });
+      console.log(`UPdated Queue`, updatedQueue);
+      res.status(200).json({ updatedQueue });
+    })
+    .catch((error) => {
+      console.log(error);
+      res.status(500).json(`ERROR adding Singersong to Queue`, error);
+    });
 });
 
+//Gets Singer and Song Details
+//singerSong => Singer Song
 router.get("/:id", (req, res) => {
   console.log(`GETTIN THE LIST DETAILS of QUEUE ID`, req.params);
   Queue.findById(req.params.id)
