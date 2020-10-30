@@ -18,7 +18,7 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "https://noda-101.netlify.app/",
+    origin: process.env.ORIGIN,
   })
 );
 

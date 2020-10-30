@@ -1,10 +1,31 @@
 const { Router } = require("express");
 const router = new Router();
 const Queue = require("../models/Queue.model");
-
+const moment = require("moment");
 router.get("/", (req, res) => {
   console.log(`Get Queue`, req.body);
-  Queue.find({})
+
+  // // checks if queue exists
+
+  // Queue.find({}, function (err, queues) {
+  //   if (err) {
+  //     console.log(err);
+  //   }
+  //   //if no queue, create one and add 1st singerSong to it.
+  //   if (!queues.length) {
+  //     console.log(`No QUEUE`);
+  //     Queue.create({});
+  //   }
+  // });
+
+  const today = moment().startOf("day");
+
+  Queue.find({
+    createdAt: {
+      $gte: today.toDate(),
+      $lte: moment(today).add(1, "days").toDate(),
+    },
+  })
     .then((queueFromDb) => {
       console.log(queueFromDb);
       res.status(200).json({ queueFromDb });
