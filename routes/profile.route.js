@@ -7,80 +7,68 @@ const bcryptjs = require("bcryptjs");
 const saltRounds = 10;
 const mongoose = require("mongoose");
 // include CLOUDINARY:
-const uploader = require('../config/cloudinary');
+const uploader = require("../config/cloudinary");
 
 ////////////////////////////////////////////////////////////////////////
 ///////////////////////////// PROFILE //////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-router.post("/", (req,res, next) => {
-  const { firstName, lastName, stageName, email, userId} = req.body;
-  console.log(`VIEW PROFILE`)
-  console.log(userId)
+router.post("/", (req, res, next) => {
+  const { firstName, lastName, stageName, email, userId } = req.body;
+  console.log(`VIEW PROFILE`);
+  console.log(userId);
   User.findById(userId)
-  .then((user)=> {
-    res.status(200).json(user)
-  })
-  .catch((error) => res.status(500).json({ errorMessage: error }));
-
+    .then((user) => {
+      res.status(200).json(user);
+    })
+    .catch((error) => res.status(500).json({ errorMessage: error }));
 });
-
 
 ////////////////////////////////////////////////////////////////////////
 ///////////////////////// EDIT PROFILE /////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-// FROM DEBORA => This returns same value if field is left blank.
-// router.post('/auth/:user/edit', async (req, res) => {
-//   const { user, campus, course, image } = req.params;
-//   const body = Object.fromEntries(
-//     Object.entries(req.body).filter((element) => element[1])
-//   );
-//   {key:value, key:value}
-//   try {
-//     const response = await User.findByIdAndUpdate(userId, body, {
-//       new: true,
-//     });
-//     return res.json({ path: '/????/' });
-//   } catch (error) {
-//     console.log(`error while editing a user ${error}`);
-//   }
-// });
-
 router.post("/editProfile", (req, res) => {
-  console.log(req.body)
-    const { firstName, lastName, stageName, email, password, userId, photoUrl } = req.body;
-    console.log(`CURRENT USER`, userId);
+  console.log(req.body);
+  const {
+    firstName,
+    lastName,
+    stageName,
+    email,
+    password,
+    userId,
+    photoUrl,
+  } = req.body;
+  console.log(`CURRENT USER`, userId);
 
-    const body = Object.fromEntries(
+  const body = Object.fromEntries(
     Object.entries(req.body).filter((element) => element[1])
   );
 
-      User.findByIdAndUpdate(userId, body, {
-          firstName, 
-          lastName,
-          stageName,
-          email,
-          photoUrl,
-        })
-        .then((user)=> {
-          res.status(200).json(user)
-        })
-      
-      .catch((error) => {
-        if (error instanceof mongoose.Error.ValidationError) {
-          res.status(200).json({ errorMessage: error.message });
-        } else if (error.code === 11000) {
-          res.status(200).json({
-            errorMessage:
-              "Stage name and email need to be unique. Either stage name or email is already used.",
-          });
-        } else {
-          res.status(500).json({ errorMessage: error });
-        }
-      }); // close .catch()
+  User.findByIdAndUpdate(userId, body, {
+    firstName,
+    lastName,
+    stageName,
+    email,
+    photoUrl,
+  })
+    .then((user) => {
+      res.status(200).json(user);
     })
 
+    .catch((error) => {
+      if (error instanceof mongoose.Error.ValidationError) {
+        res.status(200).json({ errorMessage: error.message });
+      } else if (error.code === 11000) {
+        res.status(200).json({
+          errorMessage:
+            "Stage name and email need to be unique. Either stage name or email is already used.",
+        });
+      } else {
+        res.status(500).json({ errorMessage: error });
+      }
+    }); // close .catch()
+});
 
 //SAME AS ABOVE BUT WITH PASSWORD
 // router.post("/editProfile", (req, res, next) => {
@@ -96,7 +84,7 @@ router.post("/editProfile", (req, res) => {
 //       });
 //       return;
 //     }
-  
+
 //     // make sure passwords are strong:
 //     const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
 //     if (!regex.test(password)) {
@@ -106,15 +94,13 @@ router.post("/editProfile", (req, res) => {
 //       });
 //       return;
 //     }
-  
 
-    
 //     bcryptjs
 //       .genSalt(saltRounds)
 //       .then((salt) => bcryptjs.hash(password, salt))
 //       .then((hashedPassword) => {
 //         return User.findByIdAndUpdate(userId,{
-//           firstName, 
+//           firstName,
 //           lastName,
 //           stageName,
 //           email,
@@ -139,29 +125,32 @@ router.post("/editProfile", (req, res) => {
 //       }); // close .catch()
 //   });
 
-
-
-
 ////////////////////////////////////////////////////////////////////////
 ///////////////////////// UPLOAD PHOTO /////////////////////////////////
 ////////////////////////////////////////////////////////////////////////
 
-
- 
-router.post('/upload', uploader.single("photoUrl"), (req, res, next) => {
-  const { firstName, lastName, stageName, email, password, userId, photoUrl } = req.body;
+router.post("/upload", uploader.single("photoUrl"), (req, res, next) => {
+  const {
+    firstName,
+    lastName,
+    stageName,
+    email,
+    password,
+    userId,
+    photoUrl,
+  } = req.body;
   console.log(`CURRENT USER in PHOTO UPLOAD`, userId);
-  console.log(`UPload USER ID`, req.body)
-  console.log('FILE is: ', req.file)
-    console.log(`PATH`, req.file.path)
-    // User.findByIdAndUpdate("5f900af3a0d02106ef89ce8d",{
-    //   photoUrl,
-    // })
-    
-      res.status(200).json(req.file.path)
-      .catch((error) => res.status(500).json({ errorMessage: error }));
+  console.log(`UPload USER ID`, req.body);
+  console.log("FILE is: ", req.file);
+  console.log(`PATH`, req.file.path);
+  // User.findByIdAndUpdate("5f900af3a0d02106ef89ce8d",{
+  //   photoUrl,
+  // })
 
-})
-
+  res
+    .status(200)
+    .json(req.file.path)
+    .catch((error) => res.status(500).json({ errorMessage: error }));
+});
 
 module.exports = router;
