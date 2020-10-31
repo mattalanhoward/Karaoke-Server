@@ -1,12 +1,14 @@
 const { Router } = require("express");
 const router = new Router();
 const Queue = require("../models/Queue.model");
+const SingerSong = require("../models/SingerSong.model");
 const moment = require("moment");
+
+//Get updated Queue
 router.get("/", (req, res) => {
   console.log(`Get Queue`, req.body);
 
   // // checks if queue exists
-
   // Queue.find({}, function (err, queues) {
   //   if (err) {
   //     console.log(err);
@@ -18,14 +20,15 @@ router.get("/", (req, res) => {
   //   }
   // });
 
-  const today = moment().startOf("day");
+  // const today = moment().startOf("day");
+  // SingerSong.find({
+  //   createdAt: {
+  //     $gte: today.toDate(),
+  //     $lte: moment(today).add(1, "days").toDate(),
+  //   },
+  // });
 
-  Queue.find({
-    createdAt: {
-      $gte: today.toDate(),
-      $lte: moment(today).add(1, "days").toDate(),
-    },
-  })
+  Queue.find({})
     .then((queueFromDb) => {
       console.log(queueFromDb);
       res.status(200).json({ queueFromDb });
@@ -36,6 +39,7 @@ router.get("/", (req, res) => {
     });
 });
 
+//Add singersong to queue
 router.post("/addSong", (req, res) => {
   console.log(`ADD SONG BODY SINGER`, req.body.newSignUp);
   const { newSignUp } = req.body;

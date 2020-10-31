@@ -14,6 +14,11 @@ const queueRouter = require("./routes/queue.route");
 
 const app = express();
 
+app.use(logger("dev"));
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
+
 //CORS configuration
 app.use(
   cors({
@@ -21,12 +26,6 @@ app.use(
     origin: process.env.ORIGIN,
   })
 );
-
-app.use(logger("dev"));
-app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
-
 app.use("/user", userRouter);
 app.use("/profile", profileRouter);
 app.use("/search", searchRouter);
