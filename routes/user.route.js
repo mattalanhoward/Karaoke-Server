@@ -6,7 +6,9 @@ const bcryptjs = require("bcryptjs");
 const saltRounds = 10;
 const User = require("../models/User.model");
 const Session = require("../models/Session.model");
+const Queue = require("../models/Queue.model");
 const mongoose = require("mongoose");
+const moment = require("moment");
 
 ////////////////////////////////////////////////////////////////////////
 ///////////////////////////// SIGNUP //////////////////////////////////
@@ -14,9 +16,38 @@ const mongoose = require("mongoose");
 
 // .post() route ==> to process form data
 router.post("/signup", (req, res, next) => {
+  let start = moment()
+    .startOf("day")
+    .add(4, "hours")
+    .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+  console.log(`Start`, start);
+  let end = moment()
+    .startOf("day")
+    .add(1, "day")
+    .add(4, "hours")
+    .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+  console.log(`End`, end);
+  // checks if queue exists
+  Queue.find(
+    {
+      date: {
+        $gt: start,
+        $lt: end,
+      },
+    },
+    function (err, queues) {
+      if (err) {
+        console.log(err);
+      }
+      //if no queue, create one
+      if (!queues.length) {
+        console.log(`No QUEUE`);
+        Queue.create({});
+      }
+    }
+  );
   const { stageName, email, password } = req.body;
 
-  console.log(req.body);
   if (!stageName || !email || !password) {
     res.status(200).json({
       errorMessage:
@@ -41,7 +72,6 @@ router.post("/signup", (req, res, next) => {
     .then((salt) => bcryptjs.hash(password, salt))
     .then((hashedPassword) => {
       return User.create({
-        // stageName: stageName
         stageName,
         email,
         // password => this is the key from the User model
@@ -78,6 +108,37 @@ router.post("/signup", (req, res, next) => {
 
 // .post() login route ==> to process form data
 router.post("/login", (req, res, next) => {
+  let start = moment()
+    .startOf("day")
+    .add(4, "hours")
+    .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+  console.log(`Start`, start);
+  let end = moment()
+    .startOf("day")
+    .add(1, "day")
+    .add(4, "hours")
+    .format("YYYY-MM-DDTHH:mm:ss.SSSZ");
+  console.log(`End`, end);
+  // checks if queue exists
+  Queue.find(
+    {
+      date: {
+        $gt: start,
+        $lt: end,
+      },
+    },
+    function (err, queues) {
+      if (err) {
+        console.log(err);
+      }
+      //if no queue for today, create one
+      if (!queues.length) {
+        console.log(`No QUEUE`);
+        Queue.create({});
+      }
+    }
+  );
+
   const { email, password } = req.body;
 
   if (email === "" || password === "") {
