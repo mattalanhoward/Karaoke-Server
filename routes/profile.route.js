@@ -15,10 +15,10 @@ const uploader = require("../config/cloudinary");
 
 router.post("/", (req, res, next) => {
   const { firstName, lastName, stageName, email, userId } = req.body;
-  console.log(`VIEW PROFILE`);
-  console.log(userId);
+  console.log(`VIEW PROFILE`, userId);
   User.findById(userId)
     .then((user) => {
+      console.log(user);
       res.status(200).json(user);
     })
     .catch((error) => res.status(500).json({ errorMessage: error }));
@@ -143,9 +143,9 @@ router.post("/upload", uploader.single("photoUrl"), (req, res, next) => {
   console.log(`UPload USER ID`, req.body);
   console.log("FILE is: ", req.file);
   console.log(`PATH`, req.file.path);
-  // User.findByIdAndUpdate("5f900af3a0d02106ef89ce8d",{
-  //   photoUrl,
-  // })
+  User.findByIdAndUpdate("5f9e7baabe0cba0978273cfc", {
+    photoUrl,
+  });
 
   res
     .status(200)
