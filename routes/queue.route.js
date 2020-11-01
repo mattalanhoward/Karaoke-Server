@@ -6,9 +6,10 @@ const Queue = require("../models/Queue.model");
 router.get("/", (req, res) => {
   console.log(`Get Queue`, req.body);
 
-  Queue.find({})
+  Queue.find()
+    .sort({ date: -1 })
     .then((queueFromDb) => {
-      console.log(queueFromDb);
+      console.log(`Current Queue`, queueFromDb);
       res.status(200).json({ queueFromDb });
     })
     .catch((error) => {
@@ -22,12 +23,13 @@ router.post("/addSong", (req, res) => {
   console.log(`ADD SONG BODY SINGER`, req.body.newSignUp);
   const { newSignUp } = req.body;
 
-  // if queue exists, adds to it.
+  // Find most recent queue by date and then add to it.
   Queue.findOneAndUpdate(
     {},
     { $push: { singerSong: newSignUp._id } },
     { safe: true, upsert: true, new: true }
   )
+    .sort({ date: -1 })
     .then((updatedQueue) => {
       console.log(updatedQueue);
       Queue.findOne({}).populate({
