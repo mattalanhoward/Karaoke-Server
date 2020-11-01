@@ -143,13 +143,13 @@ router.post("/upload", uploader.single("photoUrl"), (req, res, next) => {
   console.log(`UPload USER ID`, req.body);
   console.log("FILE is: ", req.file);
   console.log(`PATH`, req.file.path);
-  User.findByIdAndUpdate("5f9e7baabe0cba0978273cfc", {
+  User.findByIdAndUpdate(userId, {
     photoUrl,
-  });
-
-  res
-    .status(200)
-    .json(req.file.path)
+  })
+    .then((path) => {
+      console.log(path);
+      res.status(200).json(req.file.path);
+    })
     .catch((error) => res.status(500).json({ errorMessage: error }));
 });
 
