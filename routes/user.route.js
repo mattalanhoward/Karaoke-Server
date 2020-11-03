@@ -35,14 +35,16 @@ router.post("/signup", (req, res, next) => {
         $lt: end,
       },
     },
-    function (err, queues) {
+    (err, queues) => {
       if (err) {
         console.log(err);
       }
       //if no queue, create one
       if (!queues.length) {
         console.log(`No QUEUE`);
-        Queue.create({});
+        Queue.create({
+          date: Date.now(),
+        });
       }
     }
   );
@@ -127,14 +129,16 @@ router.post("/login", (req, res, next) => {
         $lt: end,
       },
     },
-    function (err, queues) {
+    (err, queues) => {
       if (err) {
         console.log(err);
       }
       //if no queue for today, create one
       if (!queues.length) {
         console.log(`No QUEUE`);
-        Queue.create({});
+        Queue.create({
+          date: Date.now(),
+        });
       }
     }
   );
