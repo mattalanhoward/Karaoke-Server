@@ -14,11 +14,16 @@ const uploader = require("../config/cloudinary");
 ////////////////////////////////////////////////////////////////////////
 
 router.post("/", (req, res, next) => {
-  const { firstName, lastName, stageName, email, userId } = req.body;
-  console.log(`VIEW PROFILE`, userId);
+  const {
+    firstName,
+    lastName,
+    favoriteArtist,
+    stageName,
+    email,
+    userId,
+  } = req.body;
   User.findById(userId)
     .then((user) => {
-      console.log(user);
       res.status(200).json(user);
     })
     .catch((error) => res.status(500).json({ errorMessage: error }));
@@ -29,17 +34,17 @@ router.post("/", (req, res, next) => {
 ////////////////////////////////////////////////////////////////////////
 
 router.post("/editProfile", (req, res) => {
-  console.log(req.body);
+  console.log(`EDIT PROFILE FAVORITES~`, req.body);
   const {
     firstName,
     lastName,
     stageName,
+    favoriteArtist,
     email,
     password,
     userId,
     photoUrl,
   } = req.body;
-  console.log(`CURRENT USER`, userId);
 
   const body = Object.fromEntries(
     Object.entries(req.body).filter((element) => element[1])
@@ -49,6 +54,7 @@ router.post("/editProfile", (req, res) => {
     firstName,
     lastName,
     stageName,
+    favoriteArtist,
     email,
     photoUrl,
   })
@@ -134,20 +140,17 @@ router.post("/upload", uploader.single("photoUrl"), (req, res, next) => {
     firstName,
     lastName,
     stageName,
+    favoriteArtist,
     email,
     password,
     userId,
     photoUrl,
   } = req.body;
-  console.log(`CURRENT USER in PHOTO UPLOAD`, userId);
-  console.log(`UPload USER ID`, req.body);
-  console.log("FILE is: ", req.file);
-  console.log(`PATH`, req.file.path);
+
   User.findByIdAndUpdate(userId, {
     photoUrl,
   })
     .then((path) => {
-      console.log(path);
       res.status(200).json(req.file.path);
     })
     .catch((error) => res.status(500).json({ errorMessage: error }));

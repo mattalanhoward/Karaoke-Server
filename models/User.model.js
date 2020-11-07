@@ -1,6 +1,6 @@
 // models/User.model.js
 
-const { Schema, model } = require('mongoose');
+const { Schema, model } = require("mongoose");
 
 const userSchema = new Schema(
   {
@@ -13,7 +13,10 @@ const userSchema = new Schema(
     stageName: {
       type: String,
       unique: true,
-      required: [true, "Stage Name is required."]
+      required: [true, "Stage Name is required."],
+    },
+    favoriteArtist: {
+      type: String,
     },
     email: {
       type: String,
@@ -22,22 +25,28 @@ const userSchema = new Schema(
       match: [/^\S+@\S+\.\S+$/, "Please use a valid email address."],
       unique: true,
       lowercase: true,
-      trim: true
+      trim: true,
     },
     password: {
       type: String,
-      required: [true, "Password is required."]
+      required: [true, "Password is required."],
     },
     photoUrl: {
-      type: String
+      type: String,
+      default:
+        "https://res.cloudinary.com/dcod1zxnl/image/upload/v1603130425/Noda_101_Logo_l72snm.png",
     },
     isAdmin: {
       type: Boolean,
-      default: false
-    }
+      default: false,
+    },
+    isBarDisplay: {
+      type: Boolean,
+      default: false,
+    },
   },
   {
-    timestamps: true
+    timestamps: true,
   }
 );
 

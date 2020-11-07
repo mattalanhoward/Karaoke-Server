@@ -4,23 +4,23 @@ const Queue = require("../models/Queue.model");
 
 //Get updated Queue
 router.get("/", (req, res) => {
-  console.log(`Get Queue`, req.body);
+  // console.log(`Get Queue`, req.body);
 
   Queue.find()
     .sort({ date: -1 })
     .then((queueFromDb) => {
-      console.log(`Current Queue`, queueFromDb);
+      // console.log(`Current Queue`, queueFromDb);
       res.status(200).json({ queueFromDb });
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       res.status(500).json(`ERROR getting the queue`, error);
     });
 });
 
 //Add singersong to queue
 router.post("/addSong", (req, res) => {
-  console.log(`ADD SONG BODY SINGER`, req.body.newSignUp);
+  // console.log(`ADD SONG BODY SINGER`, req.body.newSignUp);
   const { newSignUp } = req.body;
 
   // Find most recent queue by date and then add to it.
@@ -31,15 +31,15 @@ router.post("/addSong", (req, res) => {
   )
     .sort({ date: -1 })
     .then((updatedQueue) => {
-      console.log(updatedQueue);
+      // console.log(updatedQueue);
       Queue.findOne({}).populate({
         path: "singerSong",
       });
-      console.log(`UPdated Queue`, updatedQueue);
+      // console.log(`UPdated Queue`, updatedQueue);
       res.status(200).json({ updatedQueue });
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       res.status(500).json(`ERROR adding Singersong to Queue`, error);
     });
 });
@@ -47,7 +47,7 @@ router.post("/addSong", (req, res) => {
 //Gets Singer and Song Details
 //singerSong => Singer Song
 router.get("/:id", (req, res) => {
-  console.log(`GETTIN THE LIST DETAILS of QUEUE ID`, req.params);
+  // console.log(`GETTIN THE LIST DETAILS of QUEUE ID`, req.params);
   Queue.findById(req.params.id)
 
     //Deep Populate
@@ -75,7 +75,7 @@ router.get("/:id", (req, res) => {
       res.status(200).json({ song });
     })
     .catch((error) => {
-      console.log(error);
+      // console.log(error);
       res.status(500).json(`ERROR getting song details`, error);
     });
 });
