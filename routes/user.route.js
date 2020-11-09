@@ -60,11 +60,11 @@ router.post("/signup", (req, res, next) => {
 
   // make sure passwords are strong:
 
-  const regex = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}/;
+  const regex = /(?=.*\d).{6,}/;
   if (!regex.test(password)) {
     res.status(200).json({
       errorMessage:
-        "Password needs to have at least 6 chars and must contain at least one number, one lowercase and one uppercase letter.",
+        "Password needs to have at least 6 characters and must contain at least one number",
     });
     return;
   }
@@ -95,8 +95,7 @@ router.post("/signup", (req, res, next) => {
         res.status(200).json({ errorMessage: error.message });
       } else if (error.code === 11000) {
         res.status(200).json({
-          errorMessage:
-            "Stage name and email need to be unique. Either stage name or email is already used.",
+          errorMessage: "Either stage name or email is already used.",
         });
       } else {
         res.status(500).json({ errorMessage: error });
@@ -159,7 +158,7 @@ router.post("/login", (req, res, next) => {
     .then((user) => {
       if (!user) {
         res.status(200).json({
-          errorMessage: "Email is not registered. Try with other email.",
+          errorMessage: "Email is not registered.",
         });
         return;
       } else if (bcryptjs.compareSync(password, user.password)) {
