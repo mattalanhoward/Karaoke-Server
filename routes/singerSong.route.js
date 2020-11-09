@@ -5,10 +5,10 @@ const User = require("../models/User.model");
 const SingerSong = require("../models/SingerSong.model");
 
 router.post("/", (req, res) => {
-  console.log(`SINGER SONG`, req.body);
+  // console.log(`SINGER SONG`, req.body);
   const { userId, songId } = req.body;
-  console.log(`SINGER SONG SONG ID`, songId);
-  console.log(`SINGER SONG USERID`, userId);
+  // console.log(`SINGER SONG SONG ID`, songId);
+  // console.log(`SINGER SONG USERID`, userId);
 
   const singerPromise = User.findById(userId);
   const songsPromise = Songs.findById(songId);
@@ -25,7 +25,7 @@ router.post("/", (req, res) => {
 
       .then((singersong) => {
         //This is a type of populate
-        console.log(`SINGER SONG`, { ...singersong.toJSON(), singer, song });
+        // console.log(`SINGER SONG`, { ...singersong.toJSON(), singer, song });
         res.status(200).json({ ...singersong.toJSON(), singer, song });
       })
 
@@ -38,15 +38,24 @@ router.post("/", (req, res) => {
 
 router.post("/complete", (req, res) => {
   console.log(`SINGER SONG`, req.body);
-  console.log(`SINGER SONG ID`, req.body.singerSongId);
+  console.log(`SINGER SONddddddddddGFGGG ID`, req.body.singerSongId);
+  console.log(`SINGER SONG SingerId`, req.body.singer);
 
   SingerSong.findByIdAndUpdate(req.body.singerSongId)
-
     .then((updateSung) => {
       //toggle true/false
       updateSung.wasSung = !updateSung.wasSung;
       updateSung.save();
-      console.log(`SINGERSONG`, updateSung);
+
+      // console.log(`SINGERSONG`, updateSung);
+
+      User.findByIdAndUpdate(updateSung.singer).then((incrementUser) => {
+        console.log(`INCREMENT THIS BIOTCH`, incrementUser);
+        updateSung.wasSung
+          ? incrementUser.totalSongs++
+          : incrementUser.totalSongs--;
+        incrementUser.save();
+      });
       res.status(200).json(updateSung);
     })
 
@@ -58,10 +67,10 @@ router.post("/complete", (req, res) => {
 
 //User Deletes Signup
 router.post("/deleteSignup", (req, res) => {
-  console.log(`Delete Signup`, req.body.singerSongId);
+  // console.log(`Delete Signup`, req.body.singerSongId);
   SingerSong.findByIdAndDelete(req.body.singerSongId)
     .then((deletedSignup) => {
-      console.log(deletedSignup);
+      // console.log(deletedSignup);
       res.status(200).json({ deletedSignup });
     })
     .catch((error) => {

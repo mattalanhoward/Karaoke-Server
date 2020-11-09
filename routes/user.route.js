@@ -53,7 +53,7 @@ router.post("/signup", (req, res, next) => {
   if (!stageName || !email || !password) {
     res.status(200).json({
       errorMessage:
-        "All fields are mandatory. Please provide your stage name, email and password.",
+        "All fields are mandatory. Please provide your stage name, email and password",
     });
     return;
   }
@@ -95,7 +95,7 @@ router.post("/signup", (req, res, next) => {
         res.status(200).json({ errorMessage: error.message });
       } else if (error.code === 11000) {
         res.status(200).json({
-          errorMessage: "Either stage name or email is already used.",
+          errorMessage: "Either stage name or email is already used",
         });
       } else {
         res.status(500).json({ errorMessage: error });
@@ -149,7 +149,7 @@ router.post("/login", (req, res, next) => {
 
   if (email === "" || password === "") {
     res.status(500).json({
-      errorMessage: "Please enter both, email and password to login.",
+      errorMessage: "Please enter both, email and password to login",
     });
     return;
   }
@@ -158,7 +158,7 @@ router.post("/login", (req, res, next) => {
     .then((user) => {
       if (!user) {
         res.status(200).json({
-          errorMessage: "Email is not registered.",
+          errorMessage: "Email is not registered",
         });
         return;
       } else if (bcryptjs.compareSync(password, user.password)) {
@@ -169,7 +169,7 @@ router.post("/login", (req, res, next) => {
           res.status(200).json({ accessToken: session._id, user });
         });
       } else {
-        res.status(200).json({ errorMessage: "Incorrect password." });
+        res.status(200).json({ errorMessage: "Incorrect password" });
       }
     })
     .catch((error) => res.status(500).json({ errorMessage: error }));

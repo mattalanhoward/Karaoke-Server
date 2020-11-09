@@ -44,6 +44,10 @@ const userSchema = new Schema(
       type: Boolean,
       default: false,
     },
+    totalSongs: {
+      type: Number,
+      default: 0,
+    },
   },
   {
     timestamps: true,

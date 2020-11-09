@@ -34,7 +34,7 @@ router.post("/", (req, res, next) => {
 ////////////////////////////////////////////////////////////////////////
 
 router.post("/editProfile", (req, res) => {
-  console.log(`EDIT PROFILE FAVORITES~`, req.body);
+  // console.log(`EDIT PROFILE FAVORITES~`, req.body);
   const {
     firstName,
     lastName,
