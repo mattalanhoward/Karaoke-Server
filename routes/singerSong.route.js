@@ -3,6 +3,7 @@ const router = new Router();
 const Songs = require("../models/Songs.model");
 const User = require("../models/User.model");
 const SingerSong = require("../models/SingerSong.model");
+const { update } = require("../models/User.model");
 
 router.post("/", (req, res) => {
   // console.log(`SINGER SONG`, req.body);
@@ -37,25 +38,37 @@ router.post("/", (req, res) => {
 });
 
 router.post("/complete", (req, res) => {
-  console.log(`SINGER SONG`, req.body);
-  console.log(`SINGER SONddddddddddGFGGG ID`, req.body.singerSongId);
-  console.log(`SINGER SONG SingerId`, req.body.singer);
-
   SingerSong.findByIdAndUpdate(req.body.singerSongId)
     .then((updateSung) => {
-      //toggle true/false
+      //toggle true/false for wasSung
       updateSung.wasSung = !updateSung.wasSung;
       updateSung.save();
 
-      // console.log(`SINGERSONG`, updateSung);
-
+      //increment/decrement users totalsongs based on wasSung = true/false
       User.findByIdAndUpdate(updateSung.singer).then((incrementUser) => {
-        console.log(`INCREMENT THIS BIOTCH`, incrementUser);
         updateSung.wasSung
           ? incrementUser.totalSongs++
           : incrementUser.totalSongs--;
         incrementUser.save();
       });
+
+      //get all users
+      User.find()
+        //sort by total songs sung descending.
+        .sort({ totalSongs: -1 })
+        .then((sortedUsers) => {
+          //find the index of updateSung.singer
+          const index = sortedUsers.findIndex(
+            (user) => user._id == `${updateSung.singer}`
+          );
+
+          User.findByIdAndUpdate(updateSung.singer).then((updateRankings) => {
+            updateRankings.rankings.rank = index + 1;
+            updateRankings.rankings.totalUsers = User.length;
+            updateRankings.save();
+          });
+        });
+
       res.status(200).json(updateSung);
     })
 
