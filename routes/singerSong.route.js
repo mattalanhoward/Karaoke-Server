@@ -45,28 +45,29 @@ router.post("/complete", (req, res) => {
       updateSung.save();
 
       //increment/decrement users totalsongs based on wasSung = true/false
-      User.findByIdAndUpdate(updateSung.singer).then((incrementUser) => {
-        updateSung.wasSung
-          ? incrementUser.totalSongs++
-          : incrementUser.totalSongs--;
-        incrementUser.save();
-      });
+      User.findByIdAndUpdate(updateSung.singer)
+        .then((incrementUser) => {
+          updateSung.wasSung
+            ? incrementUser.totalSongs++
+            : incrementUser.totalSongs--;
+          incrementUser.save();
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(500).json(error);
+        });
 
       //get all users
       User.find()
         //sort by total songs sung descending.
         .sort({ totalSongs: -1 })
         .then((sortedUsers) => {
-          //find the index of updateSung.singer
-          const index = sortedUsers.findIndex(
-            (user) => user._id == `${updateSung.singer}`
-          );
-
-          User.findByIdAndUpdate(updateSung.singer).then((updateRankings) => {
-            updateRankings.rankings.rank = index + 1;
-            updateRankings.rankings.totalUsers = User.length;
-            updateRankings.save();
-          });
+          console.log(sortedUsers);
+          // res.status(200).json(sortedUsers);
+        })
+        .catch((error) => {
+          console.log(error);
+          res.status(500).json(error);
         });
 
       res.status(200).json(updateSung);

@@ -34,7 +34,7 @@ const userSchema = new Schema(
     photoUrl: {
       type: String,
       default:
-        "https://res.cloudinary.com/dcod1zxnl/image/upload/v1603130425/Noda_101_Logo_l72snm.png",
+        "https://res.cloudinary.com/dcod1zxnl/image/upload/v1605115637/Screen_Shot_2020-11-11_at_6.25.46_PM_l4ssfm.png",
     },
     isAdmin: {
       type: Boolean,
@@ -48,9 +48,13 @@ const userSchema = new Schema(
       type: Number,
       default: 0,
     },
-    rankings: {
-      rank: { type: Number, default: 0 },
-      totalUsers: { type: Number, default: 0 },
+    rank: {
+      type: Number,
+      default: 0,
+    },
+    totalUsers: {
+      type: Number,
+      default: 0,
     },
   },
   {
